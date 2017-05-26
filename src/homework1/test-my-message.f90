@@ -46,7 +46,23 @@ program main
   end associate
 contains
 
-  ! Write an implementaiton of my_message() here
+  function my_message(preface) result(message)
+    !! Append the image number to the dummy argument
+    character(len=*) :: preface
+    character(len=:), allocatable :: message
+    integer, parameter :: max_digits=3
+    character(len=max_digits) :: image_number
+
+    ! Requires
+    call assert(len(preface)>len(" from image "),description=" non-empty input ")
+
+    write(image_number,"(i3)") this_image()
+    message = preface // image_number
+
+    ! Ensures
+    call assert(len(message)>len(preface),description=" non-empty postfix")
+
+  end function
 
   subroutine assert(assertion,description)
     !! If assertion fails, error terminate & print description
